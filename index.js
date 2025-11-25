@@ -68,6 +68,24 @@ app.get("/jokebook/all/:category", (req, res) => {
     return res.status(500).json({ error: "internal server error" });
 });
 
+app.post("/jokebook/joke/:category", express.json(), (req, res) => {
+    const category = req.params.category;
+
+    if (!categories.includes(category)) {
+        return res.status(404).json({ error: `no jokes for category ${category}` });
+    }
+
+    const { joke, response } = req.body;
+
+    if (category === "funnyJoke") {
+        funnyJoke.push({ joke, response });
+    } else if (category === "lameJoke") {
+        lameJoke.push({ joke, response });
+    }
+
+    return res.status(201).json({ message: "joke added successfully" });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
