@@ -94,6 +94,23 @@ app.get("/jokebook/stats", (req, res) => {
     res.json(stats);
 });
 
+app.get("/jokebook/search", (req, res) => {
+    const word = req.query.word;
+
+    if (!word) {
+        return res.status(400).json({ error: "search word is required" });
+    }
+
+    const allJokes = [...funnyJoke, ...lameJoke];
+    const searchResults = allJokes.filter(
+        (joke) =>
+            joke.joke.toLowerCase().includes(word.toLowerCase()) ||
+            joke.response.toLowerCase().includes(word.toLowerCase())
+    );
+
+    res.json(searchResults);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
